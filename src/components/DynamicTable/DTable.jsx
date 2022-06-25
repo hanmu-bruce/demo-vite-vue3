@@ -13,8 +13,9 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          pagination: { layout: "prev, pager, next", total: 0 },
+          table: {},
           columns: [],
+          pagination: { layout: "prev, pager, next", total: 0 },
         };
       },
     },
@@ -22,7 +23,7 @@ export default defineComponent({
   emits: ["pageInfoChange"],
   setup(props, { emit }) {
     const pageInfo = reactive({
-      currentPage: 0,
+      currentPage: 1,
       pageSize: 10,
     });
     // 监听分页信息是否有修改
@@ -30,7 +31,8 @@ export default defineComponent({
       () => pageInfo,
       (newValue) => {
         emit("pageInfoChange", {
-          currentPage: newValue.currentPage,
+          // 记得要-1
+          currentPage: newValue.currentPage - 1,
           pageSize: newValue.pageSize,
         });
       },
@@ -42,7 +44,7 @@ export default defineComponent({
     return () => {
       return (
         <>
-          <el-table data={props.data}>
+          <el-table data={props.data} {...props.config.table}>
             {props.config.columns.map((item, index) => {
               return item.render ? (
                 <DColumn item={item} key={index} />

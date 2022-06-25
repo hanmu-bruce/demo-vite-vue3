@@ -7,18 +7,19 @@
 import { onMounted, ref } from "vue";
 import DTable from "./DTable";
 import { getStudentList } from "src/api";
-const data = ref();
+const data = ref([]);
 const total = ref(0);
 const getList = async (info) => {
   const { list, all } = await getStudentList(info);
   data.value = list;
   total.value = all;
 };
-// 表格配置
+// 表格整体配置
 const tableConfig = ref({
+  table: { border: true },
   pagination: { layout: "prev, pager, next", total },
   columns: [
-    { type: "selection", label: "" },
+    { type: "selection", label: "多选" },
     { prop: "name", label: "name" },
     {
       prop: "height",
@@ -33,6 +34,7 @@ const tableConfig = ref({
     {
       prop: "image",
       label: "image",
+      align: "center",
       render: (rowData, index) => {
         return (
           <el-image
@@ -54,14 +56,20 @@ const tableConfig = ref({
       label: "actions",
       render: (rowData, index) => {
         return (
-          <div>
-            <el-button type="primary" onClick={() => handleEdit(rowData)}>
+          <>
+            <el-button
+              type="primary"
+              onClick={() => handleEdit(rowData, index)}
+            >
               编辑
             </el-button>
-            <el-button type="danger" onClick={() => handleDelete(rowData)}>
+            <el-button
+              type="danger"
+              onClick={() => handleDelete(rowData, index)}
+            >
               删除
             </el-button>
-          </div>
+          </>
         );
       },
     },
@@ -71,8 +79,8 @@ onMounted(() => {
   getList({ currentPage: 0, pageSize: 10 });
 });
 
-const handleEdit = (row) => {
-  console.log("currentRow ", row);
+const handleEdit = (row, index) => {
+  console.log("currentRow ", row, index);
 };
 const handleDelete = () => {};
 </script>

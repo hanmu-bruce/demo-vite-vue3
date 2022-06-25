@@ -11,8 +11,8 @@ export default defineComponent({
       <el-table-column
         {...props.item}
         v-slots={{
-          default: ({ row }) => {
-            return props.item.render(row);
+          default: ({ row, $index }) => {
+            return props.item.render(row, $index);
           },
         }}
       ></el-table-column>
